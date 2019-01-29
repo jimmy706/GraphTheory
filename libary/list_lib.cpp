@@ -11,7 +11,7 @@ void make_null(List * L){
 	L->last = 0;
 }
 
-void push(List *L, ElementType ele){
+void push_back(List *L, ElementType ele){
 	L->data[L->last] = ele;
 	L->last++;
 }
