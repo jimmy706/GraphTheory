@@ -45,7 +45,8 @@ int degree(Graph *G, int x){
 List neighbours (Graph* G, int x) {
 	List list;
 	make_null(&list);
-	for(int y = 1; y <= G->numberOfVertices; y++){
+	int y = 1;
+	for( y ; y <= G->numberOfVertices; y++){
 		if(adjacent(G,x,y))
 			push(&list,y);
 	}

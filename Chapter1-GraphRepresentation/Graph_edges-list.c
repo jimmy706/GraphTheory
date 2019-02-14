@@ -1,7 +1,9 @@
 #include <stdio.h>
-#include <D:\GraphTheory-master\GraphTheory-master\libary\list_lib.cpp>
-#include <D:\GraphTheory-master\GraphTheory-master\libary\stack_lib.cpp>
+#include <E:\LyThuyetDoThi\libary\list_lib.cpp>
+#include <E:\LyThuyetDoThi\libary\stack_lib.cpp>
+#include <E:\LyThuyetDoThi\libary\queue_lib.c>
 #define MAX_EDGES 100
+#define MAX_VERTICES 200
 
 typedef struct {
 	int x, y;
@@ -52,31 +54,49 @@ int adjacent(Graph *G, int x, int y){
 }
 
 
-void neighbours (Graph* G, int x){
-	printf("Vertices which adjacent with %d are: \n", x);
+//void neighbours (Graph* G, int x){
+//	printf("Vertices which adjacent with %d are: \n", x);
+//	int y = 1;
+//	for(y; y <= G->numberOfVertices; y++){
+//		if(adjacent(G,x,y))
+//			printf("%3d",y);
+//	}
+//}
+
+List neighbours(Graph *G, int x){
+	List list;
+	make_null(&list);
 	int y = 1;
 	for(y; y <= G->numberOfVertices; y++){
 		if(adjacent(G,x,y))
-			printf("%3d",y);
+			push_back(&list,y);
 	}
+	
+	return list;
 }
 
 
+#include <E:\LyThuyetDoThi\Chapter1-GraphRepresentation\depth_first_search.cpp>
+#include <E:\LyThuyetDoThi\Chapter1-GraphRepresentation\breath_first_search.c>
 
 int main(){
 	Graph G;
-	init_graph(&G, 4);
+	init_graph(&G, 5);
 	
 	add_edge(&G, 1, 2);
 	add_edge(&G, 1, 3);
 	add_edge(&G, 1, 4);
 	add_edge(&G, 3, 1);
 	add_edge(&G, 3, 4);
+	add_edge(&G, 2, 5);
 	int i = 1;
-	for(i; i <= G.numberOfVertices; i++){
-		printf("deg(%d) = %d\n", i, degree(&G,i));
-	}
+//	for(i; i <= G.numberOfVertices; i++){
+//		printf("deg(%d) = %d\n", i, degree(&G,i));
+//	}
+
+
+	depth_first_search(&G);
+//	breath_first_search(&G);
 	
-	neighbours(&G, 1);
 	return 0;
 }
