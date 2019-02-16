@@ -1,13 +1,14 @@
 #include <stdio.h>
 #define MAX_VERTICES 100
-#define WHITE -1
-#define BLUE 0
-#define RED 1
+#define WHITE 0 // Not marked yet
+#define GRAY 1 // marked but not mark all of its adjacents
+#define BLACK 2 // marked and also marked all of its adjacents
 
 int mark[MAX_VERTICES];
 int i, j;
 int colors[MAX_VERTICES];
-int conflict;
+int cycle;
+
 
 typedef struct {
 	int numberOfVertices;
@@ -24,41 +25,52 @@ int initGraph(Graph *G, int numberOfVertices){
 }
 
 void add_edge(Graph *G, int x, int y){
+	// Graph directed
 	G->Arr[x][y] = 1;
-	G->Arr[y][x] = 1;
 }
 
-void colorize(Graph *G, int vertice,int color){
-	colors[vertice] = color;
+int adjacent(Graph *G, int x, int y){
+	return G->Arr[x][y];
+}
+
+void visit(Graph *G, int vertice){
+	colors[vertice] = GRAY; // marking
 	for(i = 1; i <= G->numberOfVertices; i++){
-		if(G->Arr[x][y]){
-			if(colors[i] == WHITE){
-				colorize(G,i,!color);
-			}
-			else if(colors[i] != color){
-				conflict = 1;
+		if(adjacent(G, vertice, i)){
+			if(colors[i] == GRAY){
+				cycle = 1;
 				return;
 			}
+			else if(colors[i] == WHITE){
+				visit(G, i);
+			}				
 		}
 	}
+	colors[vertice] = BLACK;
 }
 
-int is_bigraph(Graph *G){
-	conflict = 0;
-	int j;
+int contains_cycle(Graph *G){
+	int i,j;
+	cycle = 0;
+	
 	for(j = 1; j <= G->numberOfVertices; j++){
 		colors[j] = WHITE;
 	}
 	
-	colorize(G, 1, BLUE);
-	return !conflict;
+	for(j = 1; j <= G->numberOfVertices; j++){
+		if(colors[j] == WHITE)
+			visit(G, j);
+	}
+	return cycle;
 }
 
 
-int main () {
+
+
+int main(){
 	Graph G;
 	int numberOfVertices, numberOfEdges, e, isAllMarked = 0;
-	freopen("E:/tony/truong dai hoc/GraphTheory/dt.txt", "r", stdin);
+	freopen("E:/LyThuyetDoThi/cyle_graph.txt", "r", stdin);
 	
 	scanf("%d%d", &numberOfVertices, &numberOfEdges);
 	initGraph(&G, numberOfVertices);
@@ -68,17 +80,12 @@ int main () {
 		scanf("%d%d",&u, &v);
 		printf("\n u = %d & v = %d", u, v);
 		add_edge(&G, u, v);
-	}
+	}		
 	
-	int isBigraph = is_bigraph(&G);
-	
-	if(isBigraph)	
-		printf("\n Do thi phan doi");
+	if(contains_cycle(&G))
+		printf("\n Do thi ton tai chu trinh");
 	else
-		printf("\n Do thi ko phan doi");0
+		printf("\n Do thi ko ton tai chu trinh");
 		
-	
-	
-	
 	return 0;
 }
