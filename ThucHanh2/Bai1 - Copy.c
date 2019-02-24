@@ -1,10 +1,7 @@
 #include <stdio.h>
 #define MAX_VERTICES 100
-
 int mark[MAX_VERTICES];
 int i, j;
-int mark[MAX_VERTICES];
-
 
 typedef struct {
 	int numberOfVertices;
@@ -26,39 +23,32 @@ void add_edge(Graph *G, int x, int y){
 }
 
 void visit(Graph *G, int vertice){
-	if(mark[vertice] == 1)
-		return;
-		
+	if(mark[vertice]) return;
+	
 	mark[vertice] = 1;
+	printf("%d\n", vertice);
+	int i;
 	for(i = 1; i <= G->numberOfVertices; i++){
-		if(G->Arr[vertice][i])
+		if(G->Arr[vertice][i]){
 			visit(G, i);
+		}
 	}
 }
 
-int count_connected_components(Graph *G){
-	int count = 0;
-	int i,j;
+void depth_first_search(Graph *G){
 	for(i = 1; i <= G->numberOfVertices; i++){
 		mark[i] = 0;
 	}
 	
-	for(j = 1; j <= G->numberOfVertices; j++){
-		if(mark[j] == 0){
-			visit(G, j);
-			count++;
-		}
+	for(i = 1; i <= G->numberOfVertices; i++){
+		visit(G, i);
 	}
-	return count;
 }
-
-
-
 
 int main(){
 	Graph G;
-	int numberOfVertices, numberOfEdges, e, isAllMarked = 0;
-	freopen("count_connect.txt", "r", stdin);
+	int numberOfVertices, numberOfEdges, e;
+	freopen("dt.txt", "r", stdin);
 	
 	scanf("%d%d", &numberOfVertices, &numberOfEdges);
 	initGraph(&G, numberOfVertices);
@@ -66,13 +56,14 @@ int main(){
 	for(e = 1; e <= numberOfEdges; e++){
 		int u, v;
 		scanf("%d%d",&u, &v);
+//		printf("\n u = %d & v = %d", u, v);
 		add_edge(&G, u, v);
 	}
 	
-	int count = count_connected_components(&G);
+	depth_first_search(&G);
 	
-	printf("\n So bo phan lien thong co trong do thi la: %d ", count);
-	
-		
-	return 0;
+	for(j = 1; j <= numberOfVertices; j++){
+		if(!mark[j])
+			visit(&G,j);
+	}
 }
