@@ -80,7 +80,7 @@ int main(){
 	
 	BellmanFord(&G, 1);
 	for(i = 1; i <= numberOfVertices; i++){
-		printf("\npi[%d] = %d, parent[%d] = %d",i, pi[i], i, parent[i]);
+		printf("\npi[%d] = %d, p[%d] = %d",i, pi[i], i, parent[i]);
 	}
 		
 	
