@@ -25,10 +25,7 @@ void init_graph(Graph* G, int numberOfVertices){
 }
 
 void add_edge(Graph *G, int x, int y, int length){
-	if(length > 0 && length <= 100){
-		G->Lengths[x][y] = length;
-		G->Lengths[y][x] = length;
-	}
+	G->Lengths[x][y] = length;	
 }
 
 void FloydWarshall(Graph *G){
@@ -69,7 +66,7 @@ void FloydWarshall(Graph *G){
 int main(){
 	Graph G;
 	int numberOfVertices, numberOfEdges, e;
-	int i;
+	int i, j;
 	freopen("floyd.txt", "r", stdin);
 	scanf("%d%d", &numberOfVertices, &numberOfEdges);
 	init_graph(&G,numberOfVertices);
@@ -82,7 +79,16 @@ int main(){
 	}
 	
 	FloydWarshall(&G);
-	printf("%d", pi[1][numberOfVertices]);
+//	printf("%d", pi[1][numberOfVertices]);
+	for(i = 1; i <= numberOfVertices; i++){
+		for(j = 1; j <= numberOfVertices; j++){
+			if(pi[i][j] <= INFINITY - 100){
+				printf("%d -> %d: %d\n",i,j,pi[i][j]);
+			}
+			else
+				printf("%d -> %d: oo\n",i,j);
+		}
+	}
 	
 	return 0;
 }

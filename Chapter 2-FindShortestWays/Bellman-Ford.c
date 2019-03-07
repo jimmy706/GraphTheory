@@ -6,7 +6,6 @@
 int mark[MAX_VERTICES];
 int pi[MAX_VERTICES]; 
 int parent[MAX_VERTICES]; 
-int haveNegativeCycle = 0;
 
 typedef struct {
 	int x, y;
@@ -42,7 +41,7 @@ void BellmanFord(Graph *G, int s){
 	parent[s] = -1;
 	
 	for(it = 1; it < G->numberOfVertices; it++){
-		for(e = 0; e < G->numberOfVertices; e++){
+		for(e = 0; e < G->numberOfEdges; e++){
 			int x = G->edges[e].x;
 			int y = G->edges[e].y;
 			int length = G->edges[e].length;
@@ -52,15 +51,6 @@ void BellmanFord(Graph *G, int s){
 			}
 		}
 	}
-	
-	for(e = 0; e < G->numberOfVertices; e++){
-		int x = G->edges[e].x;
-		int y = G->edges[e].y;
-		int length = G->edges[e].length;
-		if(pi[x] + length < pi[y]){
-			haveNegativeCycle = 1;
-		}
-	} 
 }
 
 int main(){
@@ -80,7 +70,7 @@ int main(){
 	
 	BellmanFord(&G, 1);
 	for(i = 1; i <= numberOfVertices; i++){
-		printf("\npi[%d] = %d, p[%d] = %d",i, pi[i], i, parent[i]);
+		printf("pi[%d] = %d, p[%d] = %d\n",i, pi[i], i, parent[i]);
 	}
 		
 	

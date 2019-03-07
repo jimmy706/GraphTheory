@@ -6,8 +6,7 @@
 int mark[MAX_VERTICES];
 int pi[MAX_VERTICES]; // Do dai duong di ngan nhat cua pi[i]
 int parent[MAX_VERTICES]; // Dinh? lien truoc cua parent[i] tren duong di ngan nhat
-int matrix[MAX_VERTICES][MAX_VERTICES];
-int w[MAX_VERTICES]; // chua trong so cua ma tran
+int count[MAX_VERTICES]; // So duong di ngan nhat tu dinh S den count[v]
 
 typedef struct {
 	int numberOfVertices;
@@ -16,16 +15,21 @@ typedef struct {
 
 void init_graph(Graph* G, int numberOfVertices){
 	int i,j;
-	G->numberOfVertices = numberOfVertices;
-	for( i = 1; i <= G->numberOfVertices; i++){
-		for( j = 1; j <= G->numberOfVertices; j++){
-			G->Lengths[i][j] = NO_EDGE;
+	if(numberOfVertices < 100){
+		G->numberOfVertices = numberOfVertices;
+		for( i = 1; i <= G->numberOfVertices; i++){
+			for( j = 1; j <= G->numberOfVertices; j++){
+				G->Lengths[i][j] = NO_EDGE;
+			}
 		}
 	}
 }
 
 void add_edge(Graph *G, int x, int y, int length){
-	G->Lengths[x][y] = length;
+	if(length > 0 && length <= 100){
+		G->Lengths[x][y] = length;
+		G->Lengths[y][x] = length;
+	}
 }
 
 void Dijkstra(Graph* G, int s) {
@@ -33,10 +37,10 @@ void Dijkstra(Graph* G, int s) {
 	for(i = 1; i <= G->numberOfVertices; i++){
 		mark[i] = 0;
 		pi[i] = INFINITY;
+		count[i] = 0;
 	}
 	pi[s] = 0;
 	parent[s] = -1;
-	
 	for(it = 1; it <= G->numberOfVertices; it++){
 		int min_pi = INFINITY;
 		for(j = 1; j <= G->numberOfVertices; j++){
@@ -48,9 +52,10 @@ void Dijkstra(Graph* G, int s) {
 		mark[i] = 1;
 		for(j = 1; j <= G->numberOfVertices; j++){
 			if(G->Lengths[i][j] != NO_EDGE && mark[j] == 0){
-				if(pi[i] + G->Lengths[i][j] < pi[j]){
+				if(pi[i] + G->Lengths[i][j] <= pi[j]){
 					pi[j] = pi[i] + G->Lengths[i][j];
 					parent[j] = i;
+					count[j]++;
 				}
 			}
 		}
@@ -59,49 +64,28 @@ void Dijkstra(Graph* G, int s) {
 
 int main(){
 	Graph G;
-	int numberOfVertices, i, j, k, row, column, count = 0;
-	freopen("matrix.txt", "r", stdin);
-	scanf("%d%d", &row, &column);
-	numberOfVertices = row * column;
+	int numberOfVertices, numberOfEdges, e;
+	int i;
+	freopen("dt.txt", "r", stdin);
+	scanf("%d%d", &numberOfVertices, &numberOfEdges);
 	init_graph(&G,numberOfVertices);
 	
-	for(i = 0; i < row; i++){
-		for(j = 0; j < column; j++){
-			int length;
-			scanf("%d", &length);
-			matrix[i][j] = length;
-		}
-	}
+	for(e = 1; e <= numberOfEdges; e++){
+		int u, v, l;
+		scanf("%d%d%d",&u, &v, &l);
+//		printf("\n u = %d & v = %d & length = %d", u, v, l);
+		add_edge(&G, u, v, l);
+	}	
 	
-	for(i = 0; i < row; i++){
-		for(j = 0; j < column; j++){
-			int u = (i*column + j) + 1;
-			w[u] = matrix[i][j];
-		}
-	}
 	
-	int di[] = {-1, -1, 0, 0};
-	int dj[] = {0, 0, -1, -1};
-	for(i = 0; i < row; i++){
-		for(j = 0; j < column; j++){
-			int u = (i*column + j) + 1;
-			for(k=0;k < 4; k++){
-				int ii = i + di[k];
-				int jj = j + dj[k];
-				if(ii >= 0 && ii < row && jj >= 0 && jj < column){
-					int v = ii * column + jj;
-					printf("%d %d\n", u, v);
-//					add_edge(&G,u,v,w[v]);
-//					printf("\n u = %d, v = %d, w = %d",u,v, w[v]);
-				}
-			}
-		}
-	}
 	Dijkstra(&G, 1);
 //	for(i = 1; i <= numberOfVertices; i++){
 //		printf("\npi[%d] = %d, parent[%d] = %d",i, pi[i], i, parent[i]);
 //	}
-//	printf("%d",pi[numberOfVertices]);
+	if(pi[numberOfVertices] == INFINITY)	
+		printf("-1 %d", count[numberOfVertices]);
+	else
+		printf("%d %d", pi[numberOfVertices], count[numberOfVertices]);
 	
 	return 0;
 }
