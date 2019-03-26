@@ -80,26 +80,27 @@ int main(){
 		}
 	}
 	
-	int di[] = {-1, -1, 0, 0};
-	int dj[] = {0, 0, -1, -1};
-	for(i = 0; i < row; i++){
-		for(j = 0; j < column; j++){
-			int u = (i*column + j) + 1;
-			for(k=0;k < 4; k++){
-				int ii = i + di[k];
-				int jj = j + dj[k];
-				if(ii >= 0 && ii < row && jj >= 0 && jj < column){
-					int v = ii * column + jj;
-					printf("%d %d\n", u, v);
-//					add_edge(&G,u,v,w[v]);
-//					printf("\n u = %d, v = %d, w = %d",u,v, w[v]);
-				}
+	int di[] = {-1, 1, 0, 0};
+	int dj[] = {0, 0, 1, -1};
+	int u;
+	for(u = 1; u <= G.numberOfVertices; u++){
+		int i = (u-1)/column;
+		int j = (u-1)%column;
+		for(k = 0; k < 4; k++){
+			int ii = i + di[k];
+			int jj = j + dj[k];
+			if(ii >= 0 && i < row && jj >= 0 && jj < column){
+				int v = (ii*column + jj) + 1;
+				add_edge(&G,u,v,w[v]);
 			}
 		}
 	}
 	Dijkstra(&G, 1);
-//	for(i = 1; i <= numberOfVertices; i++){
-//		printf("\npi[%d] = %d, parent[%d] = %d",i, pi[i], i, parent[i]);
+	for(i = 1; i <= numberOfVertices; i++){
+		printf("\npi[%d] = %d, parent[%d] = %d",i, pi[i], i, parent[i]);
+	}
+//	for(i = 1; i <= G.numberOfVertices; i++){
+//		printf("\n w[%d] = %d", i, w[i]);
 //	}
 //	printf("%d",pi[numberOfVertices]);
 	
